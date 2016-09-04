@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="test">
+<head>
+    <meta charset="UTF-8">
+    <title>Grunt Ready NodeAngular Project</title>
+
+    <!-- build:css css/app.css -->
+    <link rel="stylesheet" href="assets/lib/bootstrap/dist/css/bootstrap.css" type="text/css"/>
+    <link rel="stylesheet" href="assets/css/style.css" type="text/css"/>
+    <!-- endbuild -->
+</head>
+<body>
+
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" ui-sref="login">Anasayfa</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="active">
+              <a ui-sref="home">Home</a>
+            </li>
+            <li >
+              <a ui-sref="dashboard">Dashboard</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+  <ui-view></ui-view>
+</div>
+
+<!-- build:js js/app.js -->
+<script src="assets/lib/angular/angular.js"></script>
+<script src="assets/lib/angular-ui-router/release/angular-ui-router.js"></script>
+
+<script src="app/app.js"></script>
+<script src="app/routes.js"></script>
+<script src="app/Home/home.js"></script>
+<script src="app/Dashboard/dashboard.js"></script>
+<!-- endbuild -->
+
+</body>
+</html>
