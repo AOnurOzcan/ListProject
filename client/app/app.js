@@ -1,1 +1,1 @@
-angular.module('test',['routes','homeModule','dashboardModule'])
+angular.module('test', ['routes', 'homepage']);

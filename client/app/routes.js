@@ -1,24 +1,19 @@
 angular.module('routes', ['ui.router'])
 
-  .config(['$stateProvider','$urlRouterProvider','$httpProvider',function ($stateProvider, $urlRouterProvider, $httpProvider) {
+  .config(['$stateProvider', '$urlRouterProvider', '$httpProvider', function ($stateProvider, $urlRouterProvider, $httpProvider) {
 
-    $httpProvider.defaults.cache = false;
     if (!$httpProvider.defaults.headers.get) {
       $httpProvider.defaults.headers.get = {};
     }
-    // disable IE ajax request caching
-    $httpProvider.defaults.headers.get['If-Modified-Since'] = '0';
+
+    $httpProvider.defaults.headers.get['Cache-Control'] = 'no-cache';
+    $httpProvider.defaults.headers.get['Pragma'] = 'no-cache';
 
     $stateProvider
 
-      .state('home', {
+      .state('Homepage', {
         url: '/',
-        templateUrl: 'Home/home.html'
-      })
-
-      .state('dashboard', {
-        url: '/dashboard',
-        templateUrl: 'Dashboard/dashboard.html'
+        templateUrl: 'Homepage/homepage.html'
       });
 
     $urlRouterProvider.otherwise("/");
