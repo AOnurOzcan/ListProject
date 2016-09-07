@@ -7,6 +7,13 @@ function getUsersLists(req, res) {
   });
 }
 
+function getAllLists(req, res) {
+  List.find({}, function (err, lists) {
+    if (err) return res.send(err);
+    res.json(lists);
+  });
+}
+
 //Create list
 project.app.post('/list', project.util.isLoggedIn, function (req, res) {
 
@@ -36,28 +43,86 @@ project.app.put('/list', project.util.isLoggedIn, function (req, res) {
 
 //Delete list
 project.app.delete('/list/:id', project.util.isLoggedIn, function (req, res) {
-  List.findById(req.params.id, function (err, list) {
+  List.findByIdAndRemove(req.params.id, function (err) {
     if (err) res.send(err);
-    list.remove(function (err, removed) {
-      if (err) res.send(err); //TODO removed değişkenini kullan
-      getUsersLists(req, res);
-    });
+    getUsersLists(req, res);
   });
 });
 
 //Get users lists
 project.app.get('/list', project.util.isLoggedIn, function (req, res) {
-  // getUsersLists(req, res);
-  List.find({}, function (err, lists) {
-    if (err) return res.send(err);
-    res.json(lists);
-  });
+  getUsersLists(req, res);
 });
 
 //Get all lists for Admin
 project.app.get('/list/all', project.util.isAdmin, function (req, res) {
-  List.find({}, function (err, lists) {
+  getAllLists(req, res);
+});
+
+//Approve a list
+project.app.get('/list/:id', project.util.isAdmin, function (req, res) {
+  List.findById(req.params.id, function (err, list) {
+    if (err) res.send(err);
+    list.isApproved = true;
+    list.save(function (err) {
+      if (err) res.send(err);
+      getAllLists(req, res);
+    });
+  });
+});
+
+//Approve an item
+project.app.get('/list/item/:list_id/:item_id', project.util.isAdmin, function (req, res) {
+  List.findById(req.params.list_id, function (err, list) {
+    if (err) res.send(err);
+
+    var isExist = list.items.some(function (item) {
+      if (item._id == req.params.item_id) {
+        item.isApproved = true;
+        return true;
+      }
+    });
+
+    if (isExist) {
+      list.save(function (err) {
+        if (err) res.send(err);
+        getAllLists(req, res);
+      });
+    } else {
+      getAllLists(req, res);
+    }
+  });
+});
+
+//Like or dislike a list
+project.app.get('/api/list/like/:list_id/:item_id', project.util.isLoggedIn, function (req, res) {
+
+  List.findById(req.params.list_id, function (err, list) {
     if (err) return res.send(err);
-    res.json(lists);
+
+    var itemIndex = 0;
+    list.items.some(function (item, index) {
+      if (item._id == req.params.item_id) {
+        itemIndex = index;
+        return true;
+      }
+    });
+
+    //Kullanıcı önceden beğenmiş mi diye kontrol ediliyor.
+    var isExist = list.items[itemIndex].likes.some(function (userId) {
+      return userId == req.user.id;
+    });
+
+    //Kullanıcı daha önceden beğenmemişse
+    if (!isExist) {
+      list.items[itemIndex].likes.push(req.user.id);
+    } else {
+      list.items[itemIndex].likes.splice(list.items[itemIndex].likes.indexOf(req.user.id), 1);
+    }
+
+    list.save(function (err) {
+      if (err) return res.send(err);
+      getUsersLists(req, res);
+    });
   });
 });

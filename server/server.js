@@ -1,4 +1,5 @@
 var express = require('express');
+var morgan = require('morgan')
 var fs = require('fs');
 var mongoose = require('mongoose'); 				// mongoose for mongodb
 var passport = require('passport');
@@ -13,6 +14,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect(database.localUrl);
 
 var app = express();
+app.use(morgan('dev')); // log every request to the console
 app.use(bodyParser.urlencoded({'extended': 'true'})); // parse application/x-www-form-urlencoded
 app.use(bodyParser.json()); // parse application/json
 
