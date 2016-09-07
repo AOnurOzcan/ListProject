@@ -12,14 +12,12 @@ module.exports = function (grunt) {
         src: 'client/index.html',
         dest: 'client/build/index.html'
       },
-      /*
       font: {
         expand: true,
         flatten: true,
-        dest: 'src/public/build/fonts/',
-        src: 'src/public/vendor/font-awesome/fonts/*'
+        dest: 'client/build/fonts/',
+        src: 'client/assets/fonts/*'
       }
-      */
     },
     usemin: {
       html: 'client/build/index.html'
@@ -45,7 +43,7 @@ module.exports = function (grunt) {
     'cssmin:generated',
     'uglify:generated',
     'copy:main',
-    /*'copy:font',*/
+    'copy:font',
     'usemin',
     'clean:tmp'
   ]);
