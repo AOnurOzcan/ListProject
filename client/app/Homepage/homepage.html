@@ -1,4 +1,37 @@
 <div ng-controller="homepageController">
-    <h1>Homepage</h1>
-    <a href="auth/facebook">Facebook ile giriş yap</a>
+    <div class="row" style="margin-top: 15px;">
+        <div class="col-md-11">
+            <ul class="nav nav-pills pull-left">
+                <li role="presentation" class="active"><a href="#">Son güncellenen listeler</a></li>
+                <li role="presentation" ng-repeat="category in categories">
+                    <a href="#" style="color:black;">{{category}}</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-1">
+            <a href="/auth/facebook" class="btn btn-primary pull-right">
+                <span class="fa fa-facebook"></span> Facebook ile giriş
+            </a>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-3" ng-repeat="list in lists">
+            <ul class="list-group">
+                <a href="#" class="list-group-item active">
+                      {{list.title}}
+                </a>
+                <a href="#" class="list-group-item" ng-repeat="item in list.items">
+                    <h4 class="list-group-item-heading">{{item.name}}
+                        <span class="pull-right"
+                              style="cursor: pointer;">
+                        <i class="fa fa-heart" style="color:red"></i>
+                        {{item.like.length}}
+                     </span>
+                    </h4>
+                    <p class="list-group-item-text">{{item.description}}</p>
+                </a>
+            </ul>
+        </div>
+    </div>
 </div>
