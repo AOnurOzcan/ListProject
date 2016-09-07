@@ -1,7 +1,38 @@
-.red {
-    color: red;
+body {
+    background: #085078; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left, #085078, #85D8CE); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left, #085078, #85D8CE); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
 }
 
-.blue {
-    color: blue;
+/* Centering nav pills*/
+.nav-tabs > li, .nav-pills > li {
+    float: none;
+    display: inline-block;
+}
+
+.nav-tabs, .nav-pills {
+    text-align: center;
+}
+
+.nav-pills > li.active > a {
+    background-color: #5cb85c;
+}
+
+.nav-pills > li.active > a:hover {
+    background-color: #5cb85c;
+}
+
+/* Spacing between rows*/
+.top-buffer {
+    margin-top: 50px;
+}
+
+/* FONTS */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Baloo Tamma', cursive;
+}
+
+p, div {
+    font-family: 'Baloo Tamma', cursive;
 }
