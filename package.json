@@ -17,8 +17,8 @@
     "express-session": "latest",
     "mongoose": "^4.4.12",
     "morgan": "^1.7.0",
-    "passport": "~0.1.17",
-    "passport-facebook": "~1.0.2",
+    "passport": "latest",
+    "passport-facebook": "latest",
     "passport-facebook-token": "latest",
     "require-dir": "latest"
   },
@@ -31,6 +31,7 @@
     "grunt-contrib-htmlmin": "^1.4.0",
     "grunt-contrib-nodeunit": "^1.0.0",
     "grunt-contrib-uglify": "^1.0.1",
+    "grunt-uncss": "^0.6.1",
     "grunt-usemin": "^3.1.1"
   }
 }

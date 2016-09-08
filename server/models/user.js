@@ -8,7 +8,7 @@ var userSchema = mongoose.Schema({
     name: String,
     profilePicture: String
   },
-  isAdmin: Boolean
+  isAdmin: {type: Boolean, default: false}
 });
 
 module.exports = mongoose.model('User', userSchema);

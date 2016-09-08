@@ -14,28 +14,52 @@ angular.module('routes', ['ui.router'])
       .state('Homepage', {
         url: '/',
         templateUrl: 'Homepage/homepage.html',
-        resolve: {
-          user: check
-        }
+        resolve: {check: requireLogin}
+      })
+
+      .state('Profile', {
+        url: '/profile',
+        templateUrl: 'Profile/profile.html',
+        resolve: {check: notRequireLogin}
       });
 
     $urlRouterProvider.otherwise("/");
 
   }]);
 
-var check = function ($q, sessionService, $state, $rootScope) {
+var requireLogin = ['$q', 'SessionService', '$state', '$rootScope', function ($q, SessionService, $state, $rootScope) {
   var deferred = $q.defer();
-  sessionService.loggedIn().success(function (userLoggedIn) {
+  SessionService.loggedIn().success(function (userLoggedIn) {
     if (userLoggedIn) {
-      $rootScope.currentUser = true;
-      $rootScope.userId = userLoggedIn._id;
-      $rootScope.userName = userLoggedIn.facebook.name;
+      if (typeof $rootScope.user == "undefined") {
+        $rootScope.user = {};
+        $rootScope.user.isLoggedIn = true;
+        $rootScope.user.userName = userLoggedIn.facebook.name;
+        $rootScope.user.picture = userLoggedIn.facebook.profilePicture;
+      }
     } else {
-      $rootScope.currentUser = false;
-      delete $rootScope.userId;
-      delete $rootScope.userName;
+      delete $rootScope.user;
     }
     deferred.resolve();
   });
   return deferred.promise;
-};
+}];
+
+var notRequireLogin = ['$q', 'SessionService', '$state', '$rootScope', function ($q, SessionService, $state, $rootScope) {
+  var deferred = $q.defer();
+  SessionService.loggedIn().success(function (userLoggedIn) {
+    if (userLoggedIn) {
+      if (typeof $rootScope.user == "undefined") {
+        $rootScope.user = {};
+        $rootScope.user.isLoggedIn = true;
+        $rootScope.user.userName = userLoggedIn.facebook.name;
+        $rootScope.user.picture = userLoggedIn.facebook.profilePicture;
+      }
+    } else {
+      delete $rootScope.user;
+      $state.go("Homepage");
+    }
+    deferred.resolve();
+  });
+  return deferred.promise;
+}];

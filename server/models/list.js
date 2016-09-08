@@ -5,7 +5,7 @@ var listSchema = mongoose.Schema({
     items: [{      //Listenin elemanları
       name: String,   //Elemanın adı
       description: String, //Eleman açıklaması
-      isApproved: Boolean,  //Eleman onay durumu
+      isApproved: {type: Boolean, default: false},  //Eleman onay durumu
       likes: [    //Beğenenler
         {
           type: mongoose.Schema.Types.String,
@@ -21,10 +21,14 @@ var listSchema = mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
     },
-    isApproved: Boolean
+    isApproved: {type: Boolean, default: false}
   },
   {
     timestamps: true
   });
+
+// listSchema.pre('save', function(next) {
+//   next();
+// });
 
 module.exports = mongoose.model('List', listSchema);

@@ -1,0 +1,53 @@
+<div class="top-buffer" ng-controller="ProfileController">
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2 text-center">
+            <img src="{{user.picture}}" class="img-circle"/>
+            <h1>Hoşgeldiniz, {{user.userName}}</h1>
+            <form class="form-inline" name="listForm">
+                <input type="text" class="form-control" name="listName" ng-model="formData.title" required>
+                <button class="btn btn-primary" ng-click="createList()" ng-disabled="listForm.listName.$invalid">Liste
+                    Oluştur
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-md-4" ng-repeat="list in lists">
+            <ul class="list-group">
+                <li class="list-group-item active">{{list.title}} -
+                    <span ng-if="list.isApproved">Onaylandı</span>
+                    <span ng-if="!list.isApproved">Onaylanmadı</span>
+                    <span ng-click="removeList(list._id)" class="pull-right" style="cursor: pointer;">
+                        <i class="fa fa-remove"></i>
+                        {{item.likes.length}}
+                     </span>
+                </li>
+                <li class="list-group-item" ng-repeat="item in list.items">
+                    <h5 class="list-group-item-heading">
+                        <strong>{{item.name}}</strong>
+                    </h5>
+                    <p class="list-group-item-text">{{item.description}}</p>
+                </li>
+                <li class="list-group-item" ng-hide="list.items.length">Hiç favori eklenmemiş</li>
+            </ul>
+            <form ng-submit="createItem(list._id, $index)" name="itemForm">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Bir uygulama ekleyin"
+                           ng-model="listArray[$index]" required>
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" placeholder="Bir açıklama ekleyin"
+                              ng-model="listFormData.description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success btn-block"  ng-disabled="itemForm.$invalid">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>

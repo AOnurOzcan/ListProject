@@ -95,7 +95,7 @@ project.app.get('/list/item/:list_id/:item_id', project.util.isAdmin, function (
 });
 
 //Like or dislike a list
-project.app.get('/api/list/like/:list_id/:item_id', project.util.isLoggedIn, function (req, res) {
+project.app.get('/list/like/:list_id/:item_id', project.util.isLoggedIn, function (req, res) {
 
   List.findById(req.params.list_id, function (err, list) {
     if (err) return res.send(err);
@@ -122,6 +122,18 @@ project.app.get('/api/list/like/:list_id/:item_id', project.util.isLoggedIn, fun
 
     list.save(function (err) {
       if (err) return res.send(err);
+      getUsersLists(req, res);
+    });
+  });
+});
+
+//Create Item
+project.app.post('/list/item/', project.util.isLoggedIn, function (req, res) {
+  List.findById(req.body.list_id, function (err, list) {
+    list.items.push({name: req.body.item, description: req.body.description, createdBy: req.user.id});
+    list.save(function (err) {
+      if (err) return res.send(err);
+
       getUsersLists(req, res);
     });
   });

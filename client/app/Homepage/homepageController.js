@@ -1,7 +1,7 @@
 angular.module('homepage')
 
-  .controller('homepageController', ['homepageService', 'sessionService', '$scope', '$rootScope',
-    function (homepageService, sessionService, $scope, $rootScope) {
+  .controller('homepageController', ['homepageService', 'SessionService', '$scope', '$rootScope',
+    function (homepageService, SessionService, $scope, $rootScope) {
       $scope.categories = ['Teknoloji', 'Dizi', 'Film', 'Oyun', 'Siyaset', 'Müzik', 'Spor', 'Bilim', 'Sosyal Medya'];
       $scope.lists = [
         {
@@ -117,9 +117,9 @@ angular.module('homepage')
         }
       ];
       $scope.logout = function () {
-        sessionService.logout().success(function (data) {
+        SessionService.logout().success(function (data) {
           if (data.logout == true) {
-            $rootScope.currentUser = false;
+            delete $rootScope.user;
           }
         });
       }

@@ -1,5 +1,5 @@
 var express = require('express');
-var morgan = require('morgan')
+var morgan = require('morgan');
 var fs = require('fs');
 var mongoose = require('mongoose'); 				// mongoose for mongodb
 var passport = require('passport');
@@ -20,7 +20,7 @@ app.use(bodyParser.json()); // parse application/json
 
 //Express-Session Configuration
 app.use(session({
-  resave: true,
+  resave: false,
   saveUninitialized: false,
   store: new RedisStore({pass: "Kajmerap123.", host: "198.199.126.151", port: 6379}),
   secret: 'nomorelie'

@@ -7,6 +7,13 @@ module.exports = function (grunt) {
         dest: 'client/build'
       }
     },
+    uncss: {
+      dist: {
+        files: {
+          'client/build/css/app.css': ['client/**/*.html']
+        }
+      }
+    },
     copy: {
       main: {
         src: 'client/index.html',
@@ -35,6 +42,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-usemin');
+  grunt.loadNpmTasks('grunt-uncss');
 
   grunt.registerTask('build', [
     'clean:build',
@@ -45,7 +53,8 @@ module.exports = function (grunt) {
     'copy:main',
     'copy:font',
     'usemin',
-    'clean:tmp'
+    'clean:tmp',
+    'uncss'
   ]);
 
   grunt.registerTask('default', ['build']);

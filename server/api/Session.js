@@ -1,16 +1,19 @@
 var User = require('../models/user');
 var passport = require('passport');
 
-project.app.get('/auth/facebook', project.passport.authenticate('facebook', {scope: 'email'}));
+project.app.get('/requireLogin/facebook', project.passport.authenticate('facebook', {scope: 'email'}));
 
-project.app.get('/auth/facebook/callback', project.passport.authenticate('facebook', {
+project.app.get('/requireLogin/facebook/callback', project.passport.authenticate('facebook', {
   successRedirect: '/#/',
   failureRedirect: '/'
 }));
 
 project.app.get('/logout', project.util.isLoggedIn, function (req, res) {
   req.logout();
-  res.json({logout: true});
+  req.session.destroy(function (err) {
+    if (err) return res.send(err);
+    res.json({logout: true});
+  });
 });
 
 // project.app.get('/profile', project.util.isLoggedIn, function (req, res) {

@@ -1,6 +1,6 @@
-angular.module('session', ['ngResource'])
+angular.module('session', [])
 
-  .factory('sessionService', ['$resource', '$http', function ($resource, $http) {
+  .factory('SessionService', ['$http', function ($http) {
     return {
       loggedIn: function () {
         return $http.get('/loggedIn');
