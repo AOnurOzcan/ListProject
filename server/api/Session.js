@@ -1,9 +1,9 @@
 var User = require('../models/user');
 var passport = require('passport');
 
-project.app.get('/requireLogin/facebook', project.passport.authenticate('facebook', {scope: 'email'}));
+project.app.get('/auth/facebook', project.passport.authenticate('facebook', {scope: 'email'}));
 
-project.app.get('/requireLogin/facebook/callback', project.passport.authenticate('facebook', {
+project.app.get('/auth/facebook/callback', project.passport.authenticate('facebook', {
   successRedirect: '/#/',
   failureRedirect: '/'
 }));
