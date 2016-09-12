@@ -6,13 +6,19 @@ angular.module('profile')
     $scope.listArray = [];
     $scope.formData = {};
 
+    //Listeleri doldur
     profileService.getUsersLists().success(function (lists) {
       $scope.lists = lists;
     });
 
+    //Kategorileri doldur
+    profileService.getCategories().success(function (categories) {
+      $scope.categories = categories;
+    });
+
     $scope.createList = function () {
 
-      if ($scope.formData.title != undefined) {
+      if ($scope.formData.title != undefined && $scope.formData.category) {
 
         profileService.createList($scope.formData)
 
@@ -39,8 +45,8 @@ angular.module('profile')
     };
 
     $scope.createItem = function (list_id, index) {
+      $scope.listFormData = $scope.listArray[index];
       $scope.listFormData.list_id = list_id;
-      $scope.listFormData.item = $scope.listArray[index];
 
       profileService.createItem($scope.listFormData)
         .success(function (lists) {

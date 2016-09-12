@@ -14,28 +14,44 @@ angular.module('routes', ['ui.router'])
       .state('Homepage', {
         url: '/',
         templateUrl: 'Homepage/homepage.html',
+        resolve: {check: notRequireLogin}
+      })
+
+      .state('Dashboard', {
+        url: '/dashboard',
+        templateUrl: 'Dashboard/dashboard.html',
         resolve: {check: requireLogin}
       })
 
-      .state('Profile', {
+      .state('Dashboard.Profile', {
         url: '/profile',
-        templateUrl: 'Profile/profile.html',
-        resolve: {check: notRequireLogin}
+        templateUrl: 'Profile/profile.html'
+      })
+
+      .state('Dashboard.Approve', {
+        url: '/approve',
+        templateUrl: 'Approve/approve.html'
+      })
+
+      .state('Dashboard.Category', {
+        url: '/category',
+        templateUrl: 'Category/category.html'
       });
 
     $urlRouterProvider.otherwise("/");
 
   }]);
 
-var requireLogin = ['$q', 'SessionService', '$state', '$rootScope', function ($q, SessionService, $state, $rootScope) {
+var notRequireLogin = ['$q', 'SessionService', '$state', '$rootScope', function ($q, SessionService, $state, $rootScope) {
   var deferred = $q.defer();
   SessionService.loggedIn().success(function (userLoggedIn) {
     if (userLoggedIn) {
       if (typeof $rootScope.user == "undefined") {
         $rootScope.user = {};
         $rootScope.user.isLoggedIn = true;
-        $rootScope.user.userName = userLoggedIn.facebook.name;
+        $rootScope.user.name = userLoggedIn.facebook.name;
         $rootScope.user.picture = userLoggedIn.facebook.profilePicture;
+        $rootScope.user.isAdmin = userLoggedIn.isAdmin;
       }
     } else {
       delete $rootScope.user;
@@ -45,15 +61,16 @@ var requireLogin = ['$q', 'SessionService', '$state', '$rootScope', function ($q
   return deferred.promise;
 }];
 
-var notRequireLogin = ['$q', 'SessionService', '$state', '$rootScope', function ($q, SessionService, $state, $rootScope) {
+var requireLogin = ['$q', 'SessionService', '$state', '$rootScope', function ($q, SessionService, $state, $rootScope) {
   var deferred = $q.defer();
   SessionService.loggedIn().success(function (userLoggedIn) {
     if (userLoggedIn) {
       if (typeof $rootScope.user == "undefined") {
         $rootScope.user = {};
         $rootScope.user.isLoggedIn = true;
-        $rootScope.user.userName = userLoggedIn.facebook.name;
+        $rootScope.user.name = userLoggedIn.facebook.name;
         $rootScope.user.picture = userLoggedIn.facebook.profilePicture;
+        $rootScope.user.isAdmin = userLoggedIn.isAdmin;
       }
     } else {
       delete $rootScope.user;

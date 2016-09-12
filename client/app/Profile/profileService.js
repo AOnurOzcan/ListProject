@@ -16,6 +16,9 @@ angular.module('profile', [])
       },
       createItem: function (item) {
         return $http.post('/list/item', item);
+      },
+      getCategories: function () {
+        return $http.get('/category');
       }
     }
   }]);

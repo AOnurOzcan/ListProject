@@ -2,7 +2,7 @@ var List = require('../models/list');
 
 function getUsersLists(req, res) {
   List.find({createdBy: req.user.id}, null, {createdAt: -1}, function (err, lists) {
-    if (err) res.send(err);
+    if (err) return res.send(err);
     res.json(lists);
   });
 }
@@ -14,17 +14,63 @@ function getAllLists(req, res) {
   });
 }
 
+function getRecentLists(req, res) {
+  List.find({isApproved: true})
+    .populate('createdBy', 'facebook.name facebook.profilePicture')
+    .populate('likes')
+    .sort({createdAt: -1})
+    .limit(4).exec(function (err, lists) {
+    if (err) return res.send(err);
+    res.json(lists);
+  });
+}
+
+function getUnapprovedLists(req, res) {
+  List.find({isApproved: false}).populate("category").exec(function (err, lists) {
+    if (err) return res.send(err);
+    res.json(lists);
+  });
+}
+
+function getUnapprovedItems(req, res) {
+  List.find({}).populate("category").exec(function (err, lists) {
+    if (err) return res.send(err);
+    var unapprovedItems = [];
+
+    lists.forEach(function (list) {
+      list.items.forEach(function (item) {
+        if (item.isApproved == false) {
+          unapprovedItems.push({
+            _id: item._id,
+            name: item.name,
+            listName: list.title,
+            category: list.category,
+            listId: list._id
+          });
+        }
+      });
+    });
+    res.json(unapprovedItems);
+  });
+}
+
+//Recent lists
+project.app.get('/list/recent', function (req, res) {
+  getRecentLists(req, res);
+});
+
 //Create list
 project.app.post('/list', project.util.isLoggedIn, function (req, res) {
 
   var list = new List({
     title: req.body.title,
     createdBy: req.user.id,
+    category: req.body.category,
     isApproved: req.user.isAdmin == true
   });
 
   list.save(function (err) {
-    if (err) res.send(err);
+    if (err) return res.send(err);
     getUsersLists(req, res);
   });
 });
@@ -34,6 +80,7 @@ project.app.put('/list', project.util.isLoggedIn, function (req, res) {
   List.findById(req.body._id, function (err, list) {
     if (err) res.send(err);
     list.title = req.body.title;
+    list.category = req.body.categoryId;
     list.save(function (err) {
       if (err) res.send(err);
       getUsersLists(req, res);
@@ -60,13 +107,13 @@ project.app.get('/list/all', project.util.isAdmin, function (req, res) {
 });
 
 //Approve a list
-project.app.get('/list/:id', project.util.isAdmin, function (req, res) {
+project.app.get('/list/approve/:id', project.util.isAdmin, function (req, res) {
   List.findById(req.params.id, function (err, list) {
     if (err) res.send(err);
     list.isApproved = true;
     list.save(function (err) {
       if (err) res.send(err);
-      getAllLists(req, res);
+      getUnapprovedLists(req, res);
     });
   });
 });
@@ -86,10 +133,10 @@ project.app.get('/list/item/:list_id/:item_id', project.util.isAdmin, function (
     if (isExist) {
       list.save(function (err) {
         if (err) res.send(err);
-        getAllLists(req, res);
+        getUnapprovedItems(req, res);
       });
     } else {
-      getAllLists(req, res);
+      getUnapprovedItems(req, res);
     }
   });
 });
@@ -130,11 +177,27 @@ project.app.get('/list/like/:list_id/:item_id', project.util.isLoggedIn, functio
 //Create Item
 project.app.post('/list/item/', project.util.isLoggedIn, function (req, res) {
   List.findById(req.body.list_id, function (err, list) {
-    list.items.push({name: req.body.item, description: req.body.description, createdBy: req.user.id});
+    list.items.push({
+      name: req.body.name,
+      link: req.body.link,
+      description: req.body.description,
+      createdBy: req.user.id,
+      isApproved: req.user.isAdmin == true
+    });
     list.save(function (err) {
       if (err) return res.send(err);
 
       getUsersLists(req, res);
     });
   });
+});
+
+//Get unapproved lists
+project.app.get('/list/unapproved', project.util.isAdmin, function (req, res) {
+  getUnapprovedLists(req, res);
+});
+
+//Get uapproved items
+project.app.get('/item/unapproved', project.util.isAdmin, function (req, res) {
+  getUnapprovedItems(req, res);
 });

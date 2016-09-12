@@ -5,6 +5,7 @@ var listSchema = mongoose.Schema({
     items: [{      //Listenin elemanları
       name: String,   //Elemanın adı
       description: String, //Eleman açıklaması
+      link: String, //Elemanın linki
       isApproved: {type: Boolean, default: false},  //Eleman onay durumu
       likes: [    //Beğenenler
         {
@@ -20,6 +21,10 @@ var listSchema = mongoose.Schema({
     createdBy: {  //Listenin kim tarafından oluşturulduğu
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
+    },
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category'
     },
     isApproved: {type: Boolean, default: false}
   },

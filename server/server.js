@@ -8,6 +8,7 @@ var session = require('express-session');
 var bodyParser = require('body-parser');
 var requireDir = require('require-dir');
 var RedisStore = require('connect-redis')(session);
+var compression = require('compression');
 
 //MongoDB Configuration
 mongoose.Promise = global.Promise;
@@ -17,6 +18,7 @@ var app = express();
 app.use(morgan('dev')); // log every request to the console
 app.use(bodyParser.urlencoded({'extended': 'true'})); // parse application/x-www-form-urlencoded
 app.use(bodyParser.json()); // parse application/json
+app.use(compression());
 
 //Express-Session Configuration
 app.use(session({

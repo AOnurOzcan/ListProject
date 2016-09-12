@@ -1,0 +1,43 @@
+<h1>Kategoriler</h1>
+<div ng-controller="categoryController">
+    <div class="row text-center">
+        <div class="col-md-6 col-md-offset-3">
+            <form class="form-inline" name="categoryForm">
+                <input type="text" class="form-control" name="categoryName" ng-model="formData.name"
+                       placeholder="Kategori Adı" required>
+                <button class="btn btn-primary" ng-click="createCategory()" ng-disabled="categoryForm.$invalid">Kategori
+                    Oluştur
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <table class="table table-bordered" style="background-color: white">
+                <tr class="bg-primary">
+                    <th>Kategori Adı</th>
+                    <th>Düzenle</th>
+                    <th>Sil</th>
+                </tr>
+                <tr ng-repeat="category in categories">
+                    <td>
+                        <span ng-if="!editMode">{{category.name}}</span>
+                        <input type="text" ng-if="editMode" ng-model="categories[$index].name">
+                    </td>
+                    <td>
+                        <button class="btn btn-success" ng-click="toggleEditMode()" ng-if="!editMode">Düzenle</button>
+                        <button class="btn btn-success" ng-if="editMode" ng-click="updateCategory($index)">Kaydet</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger" ng-if="!editMode" ng-click="removeCategory(category._id)">Sil
+                        </button>
+                        <button class="btn btn-danger" ng-click="toggleEditMode()" ng-if="editMode">İptal</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,34 +1,41 @@
 <div ng-controller="homepageController">
-    <div class="row" style="margin-top: 15px;">
+    <div class="row top-buffer-small">
         <div class="col-md-10">
             <ul class="nav nav-pills pull-left">
                 <li role="presentation" class="active"><a href="#">Son güncellenen listeler</a></li>
                 <li role="presentation" ng-repeat="category in categories">
-                    <a href="#" style="color:black;">{{category}}</a>
+                    <a href="#" style="color:black;">{{category.name}}</a>
                 </li>
             </ul>
         </div>
         <div class="col-md-2">
-            <a ng-if="!user.isLoggedIn" href="/auth/facebook" class="btn btn-primary pull-right">
-                <span><span class="fa fa-facebook"></span>Facebook ile giriş</span>
-            </a>
-            <a ng-if="user.isLoggedIn" ui-sref="Profile" class="btn btn-primary pull-right">
-                <span>{{user.userName}}</span>
-            </a>
-            <button ng-if="user.isLoggedIn" class="btn btn-danger pull-right" ng-click="logout()">Çıkış</button>
+            <div class="btn-group">
+                <a ng-if="!user.isLoggedIn" href="/auth/facebook" class="btn btn-primary">
+                    <span><span class="fa fa-facebook"></span>Facebook ile giriş</span>
+                </a>
+                <button ng-if="user.isLoggedIn" ui-sref="Dashboard.Profile" class="btn btn-primary">
+                    <span>{{user.name}}</span>
+                </button>
+                <button ng-if="user.isLoggedIn" class="btn btn-danger" ng-click="logout()">Çıkış</button>
+            </div>
         </div>
     </div>
     <hr>
+    <!-- Listeler -->
     <div class="row">
         <div class="col-md-3" ng-repeat="list in lists">
+            <form class="form">
+                <div class="form-group">
+                    <button class="btn btn-success btn-block">Katkıda bulun</button>
+                </div>
+            </form>
             <ul class="list-group">
                 <a href="#" class="list-group-item active">
                     {{list.title}}
                 </a>
-                <a href="#" class="list-group-item" ng-repeat="item in list.items">
+                <a href="#" class="list-group-item" ng-repeat="item in list.items" ng-if="item.isApproved == true">
                     <h4 class="list-group-item-heading">{{item.name}}
-                        <span class="pull-right"
-                              style="cursor: pointer;">
+                        <span class="pull-right" style="cursor: pointer;">
                         <i class="fa fa-heart" style="color:red"></i>
                         {{item.likes.length}}
                      </span>
@@ -36,6 +43,11 @@
                     <p class="list-group-item-text">{{item.description}}</p>
                 </a>
             </ul>
+            <form class="form">
+                <div class="form-group">
+                    <button class="btn btn-success btn-block">Katkıda bulun</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
