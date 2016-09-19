@@ -19,6 +19,9 @@ angular.module('profile', [])
       },
       getCategories: function () {
         return $http.get('/category');
+      },
+      removeItem: function (listId, itemId) {
+        return $http.delete('/item/' + listId + '/' + itemId);
       }
     }
   }]);

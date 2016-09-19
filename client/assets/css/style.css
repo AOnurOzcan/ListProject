@@ -16,11 +16,11 @@ body {
 }
 
 .nav-pills > li.active > a {
-    background-color: #5cb85c;
+    background-color: #e0e9e7;
 }
 
 .nav-pills > li.active > a:hover {
-    background-color: #5cb85c;
+    background-color: #e0e9e7;
 }
 
 /* Spacing between rows*/
@@ -39,4 +39,8 @@ h1, h2, h3, h4, h5, h6, p, div {
 
 .green {
     color: green;
+}
+
+.red {
+    color: red
 }

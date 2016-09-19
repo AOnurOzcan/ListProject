@@ -1,1 +1,1 @@
-angular.module('test', ['session', 'routes', 'homepage', 'profile', 'dashboard','category']);
+angular.module('test', ['session', 'routes', 'homepage', 'profile','category', 'approve']);

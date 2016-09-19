@@ -1,4 +1,4 @@
-var Category = require('../models/category');
+var Category = require('../models/categoryModel');
 
 function getCategories(req, res) {
   Category.find({}, function (err, categories) {

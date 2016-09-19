@@ -12,14 +12,22 @@ angular.module('routes', ['ui.router'])
     $stateProvider
 
       .state('Homepage', {
-        url: '/',
-        templateUrl: 'Homepage/homepage.html',
+        url: '/:categoryIndex',
+        views: {
+          'content': {
+            templateUrl: 'Homepage/homepage.html'
+          }
+        },
         resolve: {check: notRequireLogin}
       })
 
       .state('Dashboard', {
         url: '/dashboard',
-        templateUrl: 'Dashboard/dashboard.html',
+        views: {
+          'menu': {
+            templateUrl: 'Dashboard/dashboard.html'
+          }
+        },
         resolve: {check: requireLogin}
       })
 
@@ -48,6 +56,7 @@ var notRequireLogin = ['$q', 'SessionService', '$state', '$rootScope', function 
     if (userLoggedIn) {
       if (typeof $rootScope.user == "undefined") {
         $rootScope.user = {};
+        $rootScope.user.id = userLoggedIn._id;
         $rootScope.user.isLoggedIn = true;
         $rootScope.user.name = userLoggedIn.facebook.name;
         $rootScope.user.picture = userLoggedIn.facebook.profilePicture;
@@ -67,6 +76,7 @@ var requireLogin = ['$q', 'SessionService', '$state', '$rootScope', function ($q
     if (userLoggedIn) {
       if (typeof $rootScope.user == "undefined") {
         $rootScope.user = {};
+        $rootScope.user.id = userLoggedIn._id;
         $rootScope.user.isLoggedIn = true;
         $rootScope.user.name = userLoggedIn.facebook.name;
         $rootScope.user.picture = userLoggedIn.facebook.profilePicture;

@@ -5,6 +5,7 @@ angular.module('profile')
     $scope.listFormData = {};
     $scope.listArray = [];
     $scope.formData = {};
+    $scope.lists = [];
 
     //Listeleri doldur
     profileService.getUsersLists().success(function (lists) {
@@ -54,6 +55,16 @@ angular.module('profile')
           $scope.listArray = {};
           $scope.lists = lists;
         });
+    }
+
+    $scope.removeItem = function (listId, itemId, index) {
+      profileService.removeItem(listId, itemId).success(function (lists) {
+        $scope.lists.some(function (list) {
+          if (list._id == listId) {
+            list.items.splice(index, 1);
+          }
+        });
+      });
     }
 
   }]);

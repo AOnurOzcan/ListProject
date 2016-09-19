@@ -1,10 +1,13 @@
 <div ng-controller="homepageController">
+    <!-- Menü -->
     <div class="row top-buffer-small">
         <div class="col-md-10">
             <ul class="nav nav-pills pull-left">
-                <li role="presentation" class="active"><a href="#">Son güncellenen listeler</a></li>
-                <li role="presentation" ng-repeat="category in categories">
-                    <a href="#" style="color:black;">{{category.name}}</a>
+                <li role="presentation" ng-class="{ active: isActive('/')}">
+                    <a ui-sref="Homepage({categoryIndex : ''})" style="color:black;">Son güncellenen listeler</a>
+                </li>
+                <li role="presentation" ng-repeat="category in categories" ng-class="{ active: isActive('/' + $index)}">
+                    <a ui-sref="Homepage({categoryIndex : $index})" style="color:black;">{{category.name}}</a>
                 </li>
             </ul>
         </div>
@@ -24,30 +27,66 @@
     <!-- Listeler -->
     <div class="row">
         <div class="col-md-3" ng-repeat="list in lists">
-            <form class="form">
-                <div class="form-group">
-                    <button class="btn btn-success btn-block">Katkıda bulun</button>
-                </div>
-            </form>
             <ul class="list-group">
-                <a href="#" class="list-group-item active">
+                <li class="list-group-item active">
                     {{list.title}}
-                </a>
-                <a href="#" class="list-group-item" ng-repeat="item in list.items" ng-if="item.isApproved == true">
-                    <h4 class="list-group-item-heading">{{item.name}}
-                        <span class="pull-right" style="cursor: pointer;">
-                        <i class="fa fa-heart" style="color:red"></i>
-                        {{item.likes.length}}
+                    <img height="20px" width="20px"
+                         ng-src="{{list.createdBy.facebook.profilePicture}}"
+                         title="{{list.createdBy.facebook.name}}"
+                         class="img-circle pull-right">
+                    <span ng-click="open(list)" class="pull-right" style="cursor: pointer;">
+                       <i class="fa fa-plus"></i> &nbsp;
                      </span>
+                </li>
+                <li class="list-group-item" ng-repeat="item in list.items"
+                    ng-if="item.isApproved == true">
+                    <h4 class="list-group-item-heading">
+                        <a href="http://{{item.link}}" target="_blank">{{item.name}}</a>
+                        <span ng-if="user.isLoggedIn" ng-click="likeList(list._id,item._id)" class="pull-right"
+                              style="cursor: pointer;">
+                        <i class="fa fa-heart"
+                           ng-class="{'red':isExists(item.likes, user.id)}"></i>
+                        <span ng-if="item.likes.length != 0">{{item.likes.length}}</span>
+                        </span>
+                        <img height="20px" width="20px" ng-src="{{item.createdBy.facebook.profilePicture}}"
+                             title="{{item.createdBy.facebook.name}}" class="img-circle">
+                        <span ng-if="!user.isLoggedIn" class="pull-right">
+                        <i class="fa fa-heart"></i> {{item.likes.length}}
+                        </span>
                     </h4>
                     <p class="list-group-item-text">{{item.description}}</p>
-                </a>
+                </li>
+                <li class="list-group-item" ng-hide="list.items.length">Bu liste boş :(</li>
             </ul>
-            <form class="form">
-                <div class="form-group">
-                    <button class="btn btn-success btn-block">Katkıda bulun</button>
-                </div>
-            </form>
         </div>
     </div>
+
+    <script type="text/ng-template" id="contributionModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modal-title">Bu listenin gelişmesine katkıda bulunun.</h3>
+        </div>
+        <div class="modal-body" id="modal-body">
+            <form ng-submit="createItem()" name="itemForm" ng-if="!completed">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Bir uygulama ekleyin"
+                           ng-model="modalFormData.name" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Bir link ekleyin"
+                           ng-model="modalFormData.link" required>
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" placeholder="Bir açıklama ekleyin"
+                              ng-model="modalFormData.description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success btn-block" ng-disabled="itemForm.$invalid">Kaydet
+                    </button>
+                </div>
+            </form>
+            <h5 ng-if="completed">
+                Desteğiniz için teşekkürler. İsteğiniz onaylandıktan sonra herkese açık bir şekilde görünecektir.
+            </h5>
+        </div>
+    </script>
 </div>

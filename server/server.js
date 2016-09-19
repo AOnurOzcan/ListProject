@@ -39,7 +39,7 @@ project.app = app;
 project.passport = passport;
 project.util = {
   isLoggedIn: require('./util/isLoggedIn'),
-  isAdmin : require('./util/isAdmin')
+  isAdmin: require('./util/isAdmin')
 };
 
 requireDir('./api', {recurse: true});

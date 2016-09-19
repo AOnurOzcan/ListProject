@@ -32,9 +32,12 @@
                 <li class="list-group-item" ng-repeat="item in list.items">
                     <h5 class="list-group-item-heading">
                         <strong>{{item.name}}</strong>
+                        <span ng-click="removeItem(list._id, item._id, $index)" class="pull-right" style="cursor: pointer;">
+                        <i class="fa fa-remove"></i>
+                         </span>
                         <span ng-if="user.isLoggedIn" class="pull-right">
-                        <i class="fa fa-check" ng-class="{'green': item.isApproved == true}"></i>
-                     </span>
+                        <i class="fa fa-check green" ng-if="item.isApproved == true"></i>&nbsp;
+                         </span>
                     </h5>
                     <p class="list-group-item-text">{{item.description}}</p>
                 </li>

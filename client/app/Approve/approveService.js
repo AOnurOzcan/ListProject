@@ -1,6 +1,6 @@
-angular.module('dashboard', [])
+angular.module('approve', [])
 
-  .factory('dashboardService', ['$http', function ($http) {
+  .factory('approveService', ['$http', function ($http) {
     return {
       getUnapprovedLists: function () {
         return $http.get('/list/unapproved');
@@ -13,6 +13,12 @@ angular.module('dashboard', [])
       },
       approveList: function (listId) {
         return $http.get('/list/approve/' + listId);
+      },
+      removeList: function (listId) {
+        return $http.delete('/list/unapproved/' + listId);
+      },
+      removeItem: function (listId, itemId) {
+        return $http.delete('/item/' + listId + '/' + itemId);
       }
     }
   }]);

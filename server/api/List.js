@@ -1,5 +1,6 @@
-var List = require('../models/list');
+var List = require('../models/listModel');
 
+//--------- HELPER FUNCTIONS ----------//
 function getUsersLists(req, res) {
   List.find({createdBy: req.user.id}, null, {createdAt: -1}, function (err, lists) {
     if (err) return res.send(err);
@@ -18,6 +19,7 @@ function getRecentLists(req, res) {
   List.find({isApproved: true})
     .populate('createdBy', 'facebook.name facebook.profilePicture')
     .populate('likes')
+    .populate('items.createdBy')
     .sort({createdAt: -1})
     .limit(4).exec(function (err, lists) {
     if (err) return res.send(err);
@@ -43,6 +45,8 @@ function getUnapprovedItems(req, res) {
           unapprovedItems.push({
             _id: item._id,
             name: item.name,
+            description: item.description,
+            link: item.link,
             listName: list.title,
             category: list.category,
             listId: list._id
@@ -53,6 +57,21 @@ function getUnapprovedItems(req, res) {
     res.json(unapprovedItems);
   });
 }
+
+function getListsByCategory(req, res, searchCriteria) {
+  searchCriteria.isApproved = true;
+  List.find(searchCriteria)
+    .populate('createdBy', 'facebook.name facebook.profilePicture')
+    .populate('likes')
+    .populate('items.createdBy')
+    .sort({createdAt: -1})
+    .exec(function (err, lists) {
+      if (err) res.send(err);
+
+      res.json(lists);
+    });
+}
+//--------- HELPER FUNCTIONS ----------//
 
 //Recent lists
 project.app.get('/list/recent', function (req, res) {
@@ -93,6 +112,14 @@ project.app.delete('/list/:id', project.util.isLoggedIn, function (req, res) {
   List.findByIdAndRemove(req.params.id, function (err) {
     if (err) res.send(err);
     getUsersLists(req, res);
+  });
+});
+
+//Delete list and get unapproved lists
+project.app.delete('/list/unapproved/:id', project.util.isLoggedIn, function (req, res) {
+  List.findByIdAndRemove(req.params.id, function (err) {
+    if (err) res.send(err);
+    getUnapprovedLists(req, res);
   });
 });
 
@@ -169,7 +196,7 @@ project.app.get('/list/like/:list_id/:item_id', project.util.isLoggedIn, functio
 
     list.save(function (err) {
       if (err) return res.send(err);
-      getUsersLists(req, res);
+      getRecentLists(req, res);
     });
   });
 });
@@ -192,6 +219,30 @@ project.app.post('/list/item/', project.util.isLoggedIn, function (req, res) {
   });
 });
 
+//Remove item
+project.app.delete('/item/:list_id/:item_id', project.util.isLoggedIn, function (req, res) {
+  List.findById(req.params.list_id, function (err, list) {
+    if (err) return res.send(err);
+
+    var itemIndex = 0;
+    var isExist = list.items.some(function (item, index) {
+      if (item._id == req.params.item_id) {
+        itemIndex = index;
+        return true;
+      }
+    });
+
+    if (isExist == true) {
+      list.items.splice(itemIndex, 1);
+    }
+
+    list.save(function (err) {
+      if (err) return res.send(err);
+      getUnapprovedItems(req, res);
+    });
+  });
+});
+
 //Get unapproved lists
 project.app.get('/list/unapproved', project.util.isAdmin, function (req, res) {
   getUnapprovedLists(req, res);
@@ -200,4 +251,20 @@ project.app.get('/list/unapproved', project.util.isAdmin, function (req, res) {
 //Get uapproved items
 project.app.get('/item/unapproved', project.util.isAdmin, function (req, res) {
   getUnapprovedItems(req, res);
+});
+
+//Get lists by category id
+project.app.get('/list/category/:categoryId', function (req, res) {
+
+  var searchCriteria = {};
+
+  if (req.params.categoryId != null && req.params.categoryId != "undefined") {
+    if (req.params.categoryId != "recent") {
+      searchCriteria.category = req.params.categoryId;
+      getListsByCategory(req, res, searchCriteria);
+    } else {
+      getRecentLists(req, res);
+    }
+  }
+
 });

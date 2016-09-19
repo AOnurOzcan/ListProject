@@ -1,4 +1,4 @@
-var User = require('../models/user');
+var User = require('../models/userModel');
 var passport = require('passport');
 
 project.app.get('/auth/facebook', project.passport.authenticate('facebook', {scope: 'email'}));

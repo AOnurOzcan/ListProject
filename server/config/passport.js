@@ -1,6 +1,7 @@
 var FacebookStrategy = require('passport-facebook').Strategy;
-var User = require('../models/user');
-var configAuth = require('./auth'); // use this one for testing
+var User = require('../models/userModel');
+var configFile = require('./auth'); // use this one for testing
+var config = process.env.NODE_ENV == 'production' ? configFile.remoteFacebookAuth : configFile.localFacebookAuth;
 
 module.exports = function (passport) {
 
@@ -17,9 +18,9 @@ module.exports = function (passport) {
   });
 
   passport.use(new FacebookStrategy({
-      clientID: configAuth.facebookAuth.clientID,
-      clientSecret: configAuth.facebookAuth.clientSecret,
-      callbackURL: configAuth.facebookAuth.callbackURL,
+      clientID: config.clientID,
+      clientSecret: config.clientSecret,
+      callbackURL: config.callbackURL,
       profileFields: ['id', 'name', 'email', 'photos'],
       passReqToCallback: true // allows us to pass in the req from our route (lets us check if a user is logged in or not)
     },

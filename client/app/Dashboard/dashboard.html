@@ -1,10 +1,11 @@
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
+<nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
         <div class="navbar-header">
             <a class="navbar-brand" href="#">{{user.name}}</a>
         </div>
 
         <ul class="nav navbar-nav">
+            <li><a ui-sref="Homepage">Anasayfa</a></li>
             <li><a ui-sref=".Profile">Profil</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right" ng-if="user.isAdmin">
@@ -14,10 +15,6 @@
     </div>
 </nav>
 
-<ui-view></ui-view>
-
-<div class="row" ng-if="user.isAdmin">
-    <div class="col-md-12">
-
-    </div>
+<div class="container">
+    <ui-view></ui-view>
 </div>

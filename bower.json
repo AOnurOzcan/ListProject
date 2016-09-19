@@ -18,6 +18,8 @@
     "angular-ui-router": "latest",
     "bootstrap": "latest",
     "angular-resource": "latest",
-    "font-awesome": "latest"
+    "font-awesome": "latest",
+    "angular-animate": "^1.5.8",
+    "angular-bootstrap": "^2.1.3"
   }
 }

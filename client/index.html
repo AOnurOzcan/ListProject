@@ -14,20 +14,24 @@
 </head>
 <body>
 
+<div ui-view="menu"></div>
+
 <div class="container">
-    <ui-view></ui-view>
+    <div ui-view="content"></div>
 </div>
 
 <!-- build:js js/app.js -->
 <script src="assets/lib/angular/angular.js"></script>
 <script src="assets/lib/angular-ui-router/release/angular-ui-router.js"></script>
 <script src="assets/lib/angular-resource/angular-resource.js"></script>
+<script src="assets/lib/angular-bootstrap/ui-bootstrap.js"></script>
+<script src="assets/lib/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 
 <script src="app/app.js"></script>
 <script src="app/routes.js"></script>
 <script src="app/Util/sessionService.js"></script>
-<script src="app/Homepage/homepageService.js"></script>
 <script src="app/Homepage/homepageController.js"></script>
+<script src="app/Homepage/homepageService.js"></script>
 <script src="app/Profile/profileService.js"></script>
 <script src="app/Profile/profileController.js"></script>
 <script src="app/Approve/approveService.js"></script>
